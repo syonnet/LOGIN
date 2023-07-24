@@ -1,11 +1,33 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';//aqui use el hook uEf
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, Alert, Animated } from 'react-native';//importamos animated
 import { Ionicons } from '@expo/vector-icons';
 
 export default function App() {
   const backgroundImageUri = 'https://i.postimg.cc/bvmNrJPt/03.jpg';
+  const [iconPosition] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    // empieza la animacion con el loop y el hook
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(iconPosition, {
+          toValue: -20, // arriba
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(iconPosition, {
+          toValue: 0, // abajo
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
   const handleLogin = () => {
     Alert.alert('Bienvenido Humano', 'Te has logeado con éxito');
   };
+//propiedad transform y animate
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -14,7 +36,9 @@ export default function App() {
         resizeMode="cover"
       >
         <View style={styles.iconContainer}>
-          <Ionicons name="logo-playstation" size={80} color="black" />
+          <Animated.View style={{ transform: [{ translateY: iconPosition }] }}> 
+            <Ionicons name="logo-playstation" size={80} color="black" /> 
+          </Animated.View>
           <Text style={styles.title}>Bienvenido</Text>
         </View>
         <View style={styles.contentContainer}>
@@ -38,7 +62,10 @@ export default function App() {
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
             <Text style={styles.buttonText}>Iniciar sesión</Text>
           </TouchableOpacity>
-          <View style={styles.socialButtonsContainer}>
+         <Text></Text>
+         <Text style={styles.socialText}>humano es  más facil por aquí :</Text>
+         <View style={styles.divider} />
+          <View style={[styles.socialButtonsContainer,{marginHorizontal: 55}]}>
             <TouchableOpacity style={[styles.socialButton, { backgroundColor: '#3b5998' }]}>
               <Ionicons name="logo-facebook" size={24} color="white" />
             </TouchableOpacity>
@@ -63,7 +90,6 @@ export default function App() {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -161,4 +187,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  socialText: {
+    marginBottom: 10,
+    textAlign: 'center'
+  },
+  divider: {
+    borderBottomColor: '#0a0101',
+    borderBottomWidth: 1,
+    marginVertical: 5,
+    marginHorizontal: 20
+  }
 });
